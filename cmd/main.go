@@ -5,13 +5,18 @@ import (
 	"github.com/TauAdam/ecom-api/config"
 	my_sql "github.com/TauAdam/ecom-api/internal/storage/mysql"
 	"github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"log"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	cfg := config.NewConfig()
 
-	db, err := my_sql.NewMySQLStorage(mysql.Config{
+	db := my_sql.NewMySQLStorage(mysql.Config{
 		User:                 cfg.DBUser,
 		Passwd:               cfg.DBPassword,
 		DBName:               cfg.DBName,
@@ -20,9 +25,6 @@ func main() {
 		AllowNativePasswords: true,
 		ParseTime:            true,
 	})
-	if err != nil {
-		log.Fatalf("failed to connect to database: %v", err)
-	}
 
 	server := api.NewServer(":8080", db)
 	if err := server.Run(); err != nil {
