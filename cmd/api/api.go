@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"github.com/TauAdam/ecom-api/internal/controllers/user"
 	"log"
 	"net/http"
 )
@@ -16,8 +17,11 @@ func (s Server) Run() interface{} {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
+	userController := user.NewHandler()
+	userController.InitRoutes(subrouter)
+
 	log.Printf("Server is listening on %s", s.addr)
-	return http.ListenAndServe(s.addr, subrouter)
+	return http.ListenAndServe(s.addr, router)
 }
 
 func NewServer(addr string, db *sql.DB) *Server {
