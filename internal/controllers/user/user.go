@@ -8,10 +8,11 @@ import (
 )
 
 type Handler struct {
+	store models.UserStore
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(store models.UserStore) *Handler {
+	return &Handler{store: store}
 }
 
 func (h *Handler) InitRoutes(router *mux.Router) {
