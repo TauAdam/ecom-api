@@ -50,6 +50,11 @@ func scanRowIntoUser(rows *sql.Rows) (*models.User, error) {
 }
 
 func (s Store) CreateUser(payload models.User) error {
+	_, err := s.db.Exec("INSERT INTO users (firstName, lastName, email, password) VAlUES (?,?,?,?)", payload.FirstName, payload.LastName, payload.Email, payload.Password)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 func (s Store) GetUserByID(id int) (*models.User, error) {
