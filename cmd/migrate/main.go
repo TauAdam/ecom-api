@@ -2,16 +2,24 @@ package main
 
 import (
 	"errors"
+	"github.com/TauAdam/ecom-api/config"
 	my_sql "github.com/TauAdam/ecom-api/internal/storage/mysql"
 	mysqlCfg "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	cfg := config.NewConfig()
+
 	db := my_sql.NewMySQLStorage(mysqlCfg.Config{
 		User:                 cfg.DBUser,
 		Passwd:               cfg.DBPassword,
