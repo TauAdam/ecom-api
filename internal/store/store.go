@@ -49,7 +49,7 @@ func scanRowIntoUser(rows *sql.Rows) (*models.User, error) {
 	return user, nil
 }
 
-func (s Store) CreateUser(payload models.RegisterUserPayload) error {
+func (s Store) CreateUser(payload models.User) error {
 	return nil
 }
 func (s Store) GetUserByID(id int) (*models.User, error) {
