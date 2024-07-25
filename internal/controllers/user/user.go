@@ -20,14 +20,14 @@ func NewHandler(store models.UserStore) *Handler {
 
 func (h *Handler) InitRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
-	router.HandleFunc("/register", h.handleRegister).Methods("POST")
+	router.HandleFunc("/register", h.HandleRegister).Methods("POST")
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	var payload models.RegisterUserPayload
 	if err := response.ParseJSON(r, &payload); err != nil {
 		response.SendError(w, http.StatusBadRequest, err)
