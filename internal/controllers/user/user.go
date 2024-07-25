@@ -27,7 +27,31 @@ func (h *Handler) InitRoutes(router *mux.Router) {
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
+	var payload models.LoginUserPayload
+	if err := response.ParseJSON(r, &payload); err != nil {
+		response.SendError(w, http.StatusBadRequest, err)
+	}
 
+	if err := request.Validate.Struct(payload); err != nil {
+		var validationErrors validator.ValidationErrors
+		errors.As(err, &validationErrors)
+		response.SendError(w, http.StatusBadRequest, fmt.Errorf("validation error: %v", validationErrors))
+		return
+	}
+
+	u, err := h.store.GetUserByEmail(payload.Email)
+	if err != nil {
+		response.SendError(w, http.StatusBadRequest, fmt.Errorf("not found, invalid email or password"))
+	}
+
+	if auth.CorrectPassword(u.Password, []byte(payload.Password)) {
+		response.SendError(w, http.StatusForbidden, fmt.Errorf("email or password is wrong"))
+	}
+
+	err = response.SendJSON(w, http.StatusOK, map[string]string{"token": fmt.Sprintf("%d", u.ID)})
+	if err != nil {
+		log.Fatalf("failed to send response: %v", err)
+	}
 }
 
 func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {

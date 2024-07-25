@@ -58,5 +58,19 @@ func (s Store) CreateUser(payload models.User) error {
 	return nil
 }
 func (s Store) GetUserByID(id int) (*models.User, error) {
-	return nil, nil
+	rows, err := s.db.Query("SELECT * FROM users WHERE id = ?", email)
+	if err != nil {
+		return nil, err
+	}
+	user := new(models.User)
+	for rows.Next() {
+		user, err = scanRowIntoUser(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if user.ID == 0 {
+		return nil, fmt.Errorf("user not found")
+	}
+	return user, nil
 }
