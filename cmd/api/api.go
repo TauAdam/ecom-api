@@ -2,8 +2,7 @@ package api
 
 import (
 	"database/sql"
-	"github.com/TauAdam/ecom-api/internal/controllers/user"
-	"github.com/TauAdam/ecom-api/internal/store"
+	"github.com/TauAdam/ecom-api/internal/modules/user"
 	"log"
 	"net/http"
 )
@@ -18,7 +17,7 @@ func (s Server) Run() interface{} {
 	router := mux.NewRouter()
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
-	userStore := store.NewUserStore(s.db)
+	userStore := user.NewUserStore(s.db)
 	userController := user.NewHandler(userStore)
 	userController.InitRoutes(subrouter)
 
