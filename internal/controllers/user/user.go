@@ -3,6 +3,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"github.com/TauAdam/ecom-api/config"
 	"github.com/TauAdam/ecom-api/internal/auth"
 	"github.com/TauAdam/ecom-api/internal/controllers/request"
 	"github.com/TauAdam/ecom-api/internal/controllers/response"
@@ -48,10 +49,17 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		response.SendError(w, http.StatusForbidden, fmt.Errorf("email or password is wrong"))
 	}
 
-	err = response.SendJSON(w, http.StatusOK, map[string]string{"token": fmt.Sprintf("%d", u.ID)})
+	secret := []byte(config.Envs.JWTSecret)
+	token, err := auth.CreateJWToken(secret, u.ID)
+	if err != nil {
+		response.SendError(w, http.StatusInternalServerError, err)
+		return
+	}
+	err = response.SendJSON(w, http.StatusOK, map[string]string{"token": token})
 	if err != nil {
 		log.Fatalf("failed to send response: %v", err)
 	}
+	return
 }
 
 func (h *Handler) HandleRegister(w http.ResponseWriter, r *http.Request) {
