@@ -35,3 +35,39 @@ func TestHashPassword(t *testing.T) {
 		})
 	}
 }
+
+func TestCorrectPassword(t *testing.T) {
+	tests := []struct {
+		name      string
+		plaintext string
+		password  string
+		want      bool
+	}{
+		{
+			name:      "basic case",
+			plaintext: "qwerty",
+			password:  "qwerty",
+			want:      true,
+		},
+		{
+			name:      "wrong password case",
+			plaintext: "wrong-password",
+			password:  "password",
+			want:      false,
+		},
+		{
+			name:      "wrong password case",
+			plaintext: "invalid-password",
+			password:  "some-real-password",
+			want:      false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			hashedPassword, _ := HashPassword(tt.password)
+			if got := CorrectPassword(hashedPassword, []byte(tt.plaintext)); got != tt.want {
+				t.Errorf("CorrectPassword() = %v, notWant %v", got, tt.want)
+			}
+		})
+	}
+}

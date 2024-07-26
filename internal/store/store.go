@@ -58,7 +58,7 @@ func (s Store) CreateUser(payload models.User) error {
 	return nil
 }
 func (s Store) GetUserByID(id int) (*models.User, error) {
-	rows, err := s.db.Query("SELECT * FROM users WHERE id = ?", email)
+	rows, err := s.db.Query("SELECT * FROM users WHERE id = ?", id)
 	if err != nil {
 		return nil, err
 	}
