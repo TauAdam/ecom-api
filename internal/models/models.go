@@ -40,4 +40,5 @@ type Product struct {
 }
 type ProductsStore interface {
 	GetProducts() ([]Product, error)
+	CreateProduct(payload Product) error
 }

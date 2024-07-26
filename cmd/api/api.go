@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"github.com/TauAdam/ecom-api/internal/modules/products"
 	"github.com/TauAdam/ecom-api/internal/modules/user"
 	"log"
 	"net/http"
@@ -20,6 +21,10 @@ func (s Server) Run() interface{} {
 	userStore := user.NewUserStore(s.db)
 	userController := user.NewHandler(userStore)
 	userController.InitRoutes(subrouter)
+
+	productStore := products.NewProductsStore(s.db)
+	productHandler := products.NewHandler(productStore)
+	productHandler.InitRoutes(subrouter)
 
 	log.Printf("Server is listening on %s", s.addr)
 	return http.ListenAndServe(s.addr, router)

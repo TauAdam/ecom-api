@@ -9,6 +9,15 @@ type Store struct {
 	db *sql.DB
 }
 
+func (s Store) CreateProduct(payload models.Product) error {
+	_, err := s.db.Exec("INSERT INTO products (Name, Description, Price, Image, Quantity) VALUES (?,?,?,?,?)", payload.Name, payload.Description, payload.Price, payload.Image, payload.Quantity)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewProductsStore(db *sql.DB) Store {
 	return Store{db: db}
 }
