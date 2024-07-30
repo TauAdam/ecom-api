@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: mydb  # create a default database
+      MYSQL_USER: myuser  # create a default user
+      MYSQL_PASSWORD: mypass  # set a password for the default user
+    ports:
+      - "3306:3306"  # map the container port to the host port
+    volumes:
+      - db-data:/var/lib/mysql  # persist data even after container restarts
+
+volumes:
+  db-data:

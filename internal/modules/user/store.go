@@ -15,21 +15,19 @@ func NewUserStore(db *sql.DB) Store {
 }
 
 func (s Store) GetUserByEmail(email string) (*models.User, error) {
-	rows, err := s.db.Query("SELECT * FROM users WHERE email = ?", email)
+	var user models.User
+
+	err := s.db.QueryRow(
+		"SELECT * FROM users WHERE email = ?", email).
+		Scan(&user.ID, &user.Email, &user.Password, &user.CreatedAt, &user.FirstName, &user.LastName)
 	if err != nil {
 		return nil, err
 	}
-	user := new(models.User)
-	for rows.Next() {
-		user, err = scanRowIntoUser(rows)
-		if err != nil {
-			return nil, err
-		}
-	}
+
 	if user.ID == 0 {
 		return nil, fmt.Errorf("user not found")
 	}
-	return user, nil
+	return &user, nil
 }
 
 func scanRowIntoUser(rows *sql.Rows) (*models.User, error) {
