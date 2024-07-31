@@ -37,4 +37,10 @@ func (h *Handler) handleCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	productIDs, err := getCartItemsIDs(cart.Items)
+	if err != nil {
+		response.SendError(w, http.StatusBadRequest, fmt.Errorf("invalid request payload %v", err))
+		return
+	}
+
 }

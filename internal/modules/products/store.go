@@ -62,4 +62,22 @@ func (s Store) GetProductByIDs(ids []int) ([]models.Product, error) {
 	placeholders := strings.Repeat("?,", len(ids)-1)
 	query := fmt.Sprintf("SELECT * FROM products WHERE id IN (%s?)", placeholders)
 
+	args := make([]interface{}, len(ids))
+	for i, v := range ids {
+		args[i] = v
+	}
+
+	rows, err := s.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	products := make([]models.Product, 0)
+	for rows.Next() {
+		p, err := scanRowIntoProducts(rows)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, *p)
+	}
+	return products, nil
 }
