@@ -1,9 +1,9 @@
 # ecommerce-api
 
 ## Roadmap
-- [ ] connect to database
-- [ ] register user
-- [ ] test user registration
-- [ ] database migrations 
-- [ ] login user
-- [ ] jwt authentication
+- [x] connect to database
+- [x] register user
+- [x] test user registration
+- [x] database migrations 
+- [x] login user
+- [x] jwt authentication

@@ -2,7 +2,9 @@ package products
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/TauAdam/ecom-api/internal/models"
+	"strings"
 )
 
 type Store struct {
@@ -54,4 +56,10 @@ func scanRowIntoProducts(rows *sql.Rows) (*models.Product, error) {
 		return nil, err
 	}
 	return product, nil
+}
+
+func (s Store) GetProductByIDs(ids []int) ([]models.Product, error) {
+	placeholders := strings.Repeat("?,", len(ids)-1)
+	query := fmt.Sprintf("SELECT * FROM products WHERE id IN (%s?)", placeholders)
+
 }
