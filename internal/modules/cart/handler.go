@@ -3,6 +3,7 @@ package cart
 import (
 	"errors"
 	"fmt"
+	"github.com/TauAdam/ecom-api/internal/auth"
 	"github.com/TauAdam/ecom-api/internal/models"
 	"github.com/TauAdam/ecom-api/shared/request"
 	"github.com/TauAdam/ecom-api/shared/response"
@@ -14,14 +15,15 @@ import (
 type Handler struct {
 	store         models.CartStore
 	productsStore models.ProductsStore
+	userStore     models.UserStore
 }
 
-func NewHandler(store models.CartStore) *Handler {
-	return &Handler{store: store}
+func NewHandler(store models.CartStore, productsStore models.ProductsStore, userStore models.UserStore) *Handler {
+	return &Handler{store, productsStore, userStore}
 }
 
 func (h *Handler) InitRoutes(router *mux.Router) {
-	router.HandleFunc("/cart/checkout", h.handleCheckout).Methods(http.MethodPost)
+	router.HandleFunc("/cart/checkout", auth.JWTGuard(h.handleCheckout, h.userStore)).Methods(http.MethodPost)
 }
 
 func (h *Handler) handleCheckout(w http.ResponseWriter, r *http.Request) {
