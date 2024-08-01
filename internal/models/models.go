@@ -46,6 +46,7 @@ type ProductsStore interface {
 type CartStore interface {
 	CreateOrder(Order) (int, error)
 	CreateOrderItem(OrderItem) error
+	UpdateProduct(product Product) error
 }
 
 type Order struct {

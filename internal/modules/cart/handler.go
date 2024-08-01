@@ -12,7 +12,8 @@ import (
 )
 
 type Handler struct {
-	store models.CartStore
+	store         models.CartStore
+	productsStore models.ProductsStore
 }
 
 func NewHandler(store models.CartStore) *Handler {
@@ -40,6 +41,27 @@ func (h *Handler) handleCheckout(w http.ResponseWriter, r *http.Request) {
 	productIDs, err := getCartItemsIDs(cart.Items)
 	if err != nil {
 		response.SendError(w, http.StatusBadRequest, fmt.Errorf("invalid request payload %v", err))
+		return
+	}
+
+	products, err := h.productsStore.GetProductByIDs(productIDs)
+	if err != nil {
+		response.SendError(w, http.StatusInternalServerError, fmt.Errorf("failed to get products %v", err))
+		return
+	}
+
+	orderID, totalPrice, err := h.createOrder(products, cart.Items, 1)
+	if err != nil {
+		response.SendError(w, http.StatusInternalServerError, fmt.Errorf("failed to create order %v", err))
+		return
+	}
+
+	err = response.SendJSON(w, http.StatusOK, map[string]any{
+		"order_id": orderID,
+		"total":    totalPrice,
+	})
+	if err != nil {
+		response.SendError(w, http.StatusInternalServerError, fmt.Errorf("failed to send response %v", err))
 		return
 	}
 

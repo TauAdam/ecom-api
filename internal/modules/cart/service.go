@@ -28,9 +28,34 @@ func (h *Handler) createOrder(products []models.Product, cartItems []models.Cart
 		return 0, 0, err
 	}
 
-	// TODO: calculate total price
+	totalPrice := calculateTotalPrice(cartItems, productsMap)
 
-	return 0, 0, nil
+	for _, item := range cartItems {
+		product := productsMap[item.ProductID]
+		product.Quantity -= item.Quantity
+
+		h.store.UpdateProduct(product)
+	}
+
+	orderID, err := h.store.CreateOrder(models.Order{
+		UserID:  userID,
+		Total:   totalPrice,
+		Status:  "pending",
+		Address: "Walker Street 12",
+	})
+	if err != nil {
+		return 0, 0, err
+	}
+
+	for _, item := range cartItems {
+		h.store.CreateOrderItem(models.OrderItem{
+			OrderID:   orderID,
+			ProductID: item.ProductID,
+			Quantity:  item.Quantity,
+			Price:     productsMap[item.ProductID].Price,
+		})
+	}
+	return orderID, totalPrice, nil
 }
 
 func isItemsInStock(items []models.CartItem, productsMap map[int]models.Product) error {
@@ -47,9 +72,9 @@ func isItemsInStock(items []models.CartItem, productsMap map[int]models.Product)
 
 		if product.Quantity < item.Quantity {
 			return fmt.Errorf("product %s is not available in the quantitiy requested", product.Name)
+
 		}
 	}
-
 	return nil
 }
 

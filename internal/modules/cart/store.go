@@ -32,3 +32,12 @@ func (s *Store) CreateOrderItem(orderItem models.OrderItem) error {
 	}
 	return nil
 }
+
+func (s *Store) UpdateProduct(product models.Product) error {
+	_, err := s.db.Exec("UPDATE products SET name = ?, description = ?, price = ?, image = ?, quantity = ? WHERE id = ?", product.Name, product.Description, product.Price, product.Image, product.Quantity, product.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
