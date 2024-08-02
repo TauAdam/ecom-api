@@ -52,7 +52,8 @@ func (h *Handler) handleCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderID, totalPrice, err := h.createOrder(products, cart.Items, 1)
+	userID := auth.GetUserIDFromContext(r.Context())
+	orderID, totalPrice, err := h.createOrder(products, cart.Items, userID)
 	if err != nil {
 		response.SendError(w, http.StatusInternalServerError, fmt.Errorf("failed to create order %v", err))
 		return
