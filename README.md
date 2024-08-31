@@ -1,7 +1,11 @@
-# ecommerce-api
-
 ## Description
 This is an ecommerce api that allows users to register, login, view and order products.
+
+## How to run
+- Clone repo
+- Install dependencies with `go mod download`
+- run `migrate-up` from Makefile to apply migrations
+- `make run` to run start application
 
 ## Roadmap
 - [x] connect to database
