@@ -4,6 +4,7 @@ This is an ecommerce api that allows users to register, login, view and order pr
 ## How to run
 - Clone repo
 - Install dependencies with `go mod download`
+- Start database with docker compose file
 - run `migrate-up` from Makefile to apply migrations
 - `make run` to run start application
 
