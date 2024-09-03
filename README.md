@@ -8,6 +8,9 @@ This is an ecommerce api that allows users to register, login, view and order pr
 - run `migrate-up` from Makefile to apply migrations
 - `make run` to run start application
 
+![img.png](img.png)
+![img_1.png](img_1.png)
+
 ## Roadmap
 - [x] connect to database
 - [x] register user

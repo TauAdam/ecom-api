@@ -28,10 +28,10 @@ func NewConfig() Config {
 	return Config{
 		PublicHost:           getEnvVar("PUBLIC_HOST", "http://localhost"),
 		Port:                 getEnvVar("PORT", "8080"),
-		DBUser:               getEnvVar("DB_USER", "admin"),
-		DBPassword:           getEnvVar("DB_PASSWORD", "password"),
-		DBName:               getEnvVar("DB_NAME", "ecommerce"),
-		DBAddress:            fmt.Sprintf("%s:%s", getEnvVar("DB_HOST", "localhost"), getEnvVar("DB_PORT", "3303")),
+		DBUser:               getEnvVar("DB_USER", "myuser"),
+		DBPassword:           getEnvVar("DB_PASSWORD", "mypass"),
+		DBName:               getEnvVar("DB_NAME", "mydb"),
+		DBAddress:            fmt.Sprintf("%s:%s", getEnvVar("DB_HOST", "localhost"), getEnvVar("DB_PORT", "3306")),
 		JWTExpirationSeconds: getEnvAsInteger("JWT_EXPIRATION", 3600*24),
 		JWTSecret:            getEnvVar("JWT_SECRET", "super-secret-token"),
 	}

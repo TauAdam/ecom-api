@@ -34,7 +34,7 @@ func main() {
 		log.Fatal(err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://cmd/migrations", "mysql", driver)
+		"file://cmd/migrate/migrations", "mysql", driver)
 	if err != nil {
 		log.Fatal(err)
 	}

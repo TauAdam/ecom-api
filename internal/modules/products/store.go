@@ -12,7 +12,7 @@ type Store struct {
 }
 
 func (s Store) CreateProduct(payload models.Product) error {
-	_, err := s.db.Exec("INSERT INTO products (Name, Description, Price, Image, Quantity) VALUES (?,?,?,?,?)", payload.Name, payload.Description, payload.Price, payload.Image, payload.Quantity)
+	_, err := s.db.Exec("INSERT INTO products (name, description, price, image, quantity) VALUES (?,?,?,?,?)", payload.Name, payload.Description, payload.Price, payload.Image, payload.Quantity)
 	if err != nil {
 		return err
 	}
@@ -29,6 +29,8 @@ func (s Store) GetProducts() ([]models.Product, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
+
 	products := make([]models.Product, 0)
 	for rows.Next() {
 		p, err := scanRowIntoProducts(rows)
